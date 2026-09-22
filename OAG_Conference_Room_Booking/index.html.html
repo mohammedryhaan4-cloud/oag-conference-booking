@@ -1,0 +1,4330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>OAG Conference Room Booking</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f5f5f5;
+    color: #242424;
+}
+
+/* =========================
+   TOP BAR
+========================= */
+
+.topbar {
+    height: 56px;
+    background: #ffffff;
+    border-bottom: 1px solid #e1e1e1;
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+}
+
+.oag-logo {
+    width: 72px;
+    height: 42px;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    flex: 0 0 auto;
+    margin-right: 12px;
+}
+
+.brand {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.top-title {
+    margin-left: 25px;
+    padding-left: 25px;
+    border-left: 1px solid #ddd;
+    color: #616161;
+    font-size: 14px;
+}
+
+.top-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: #616161;
+    font-size: 14px;
+}
+
+/* =========================
+   TOP BAR BUTTONS
+========================= */
+
+.top-link {
+    border: none;
+    background: transparent;
+    color: #616161;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 6px 2px;
+    cursor: pointer;
+}
+
+.top-link:hover {
+    color: #0067b8;
+}
+
+.profile {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #e8e8e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #444;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+/* =========================
+   MAIN PAGE
+========================= */
+
+.page {
+    max-width: 1180px;
+    margin: auto;
+    padding: 38px 25px 60px;
+}
+
+.page-heading {
+    margin-bottom: 28px;
+}
+
+.page-heading h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0 0 8px;
+}
+
+.page-heading p {
+    margin: 0;
+    font-size: 14px;
+    color: #616161;
+}
+
+/* =========================
+   ROOM CARD
+========================= */
+
+.room-card {
+    background: white;
+    border: 1px solid #e1e1e1;
+    display: grid;
+    grid-template-columns: 42% 58%;
+    margin-bottom: 24px;
+}
+
+.room-image {
+    min-height: 210px;
+    background:
+        linear-gradient(rgba(0,70,120,0.08),rgba(0,70,120,0.08)),
+        url("oag.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+.room-information {
+    padding: 21px 35px;
+}
+
+.room-selector {
+    margin-bottom: 24px;
+}
+
+.room-selector label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+.room-selector select {
+    max-width: 360px;
+}
+
+.room-information h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 7px;
+}
+
+.room-location {
+    color: #616161;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px 30px;
+}
+
+.detail {
+    display: flex;
+    gap: 12px;
+}
+
+.detail-icon {
+    width: 30px;
+    height: 30px;
+    background: #f5f5f5;
+    color: #242424;
+    border: 1px solid #d9d9d9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.detail-icon svg {
+    width: 16px;
+    height: 16px;
+    stroke: #242424;
+    stroke-width: 1.8;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.detail strong {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 3px;
+}
+
+.detail span {
+    color: #616161;
+    font-size: 13px;
+}
+
+/* =========================
+   BOOKING CONTAINER
+========================= */
+
+.booking-container {
+    background: white;
+    border: 1px solid #e1e1e1;
+}
+
+.booking-header {
+    padding: 25px 30px;
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.booking-header h2 {
+    margin: 0 0 6px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.booking-header p {
+    margin: 0;
+    font-size: 13px;
+    color: #616161;
+}
+
+/* =========================
+   CALENDAR + TIME
+========================= */
+
+.time-slot:disabled {
+    pointer-events: none;
+}
+
+.book-button:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.booking-content {
+    display: grid;
+    grid-template-columns: 48% 52%;
+}
+
+.calendar-section {
+    padding: 28px 30px;
+    border-right: 1px solid #e1e1e1;
+}
+
+.section-label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.month-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.month-navigation strong {
+    font-size: 15px;
+}
+
+.nav-button {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ddd;
+    background: white;
+    cursor: pointer;
+}
+
+.nav-button:hover {
+    background: #f5f5f5;
+}
+
+.calendar {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.calendar th {
+    font-size: 11px;
+    color: #616161;
+    height: 35px;
+}
+
+.calendar td {
+    text-align: center;
+    height: 43px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.calendar td:hover {
+    background: #f2f7fb;
+}
+
+.calendar td.today {
+    border: 1px solid #0067b8;
+    font-weight: 600;
+}
+
+.calendar td.selected {
+    background: #0067b8;
+    color: white;
+    font-weight: 600;
+}
+
+.time-section {
+    padding: 28px 30px;
+}
+
+.selected-date {
+    background: #f7f7f7;
+    border-left: 3px solid #0067b8;
+    padding: 11px 13px;
+    margin-bottom: 18px;
+    font-size: 13px;
+}
+
+.time-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.time-slot {
+    border: 1px solid #d1d1d1;
+    background: white;
+    min-height: 58px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+}
+
+/* =========================
+   TIME SLOT LABELS
+========================= */
+
+.time-slot .time-label {
+    text-decoration: none;
+}
+
+/* Cross out ONLY the time */
+.time-slot.booked .time-label,
+.time-slot.unavailable .time-label {
+    text-decoration: line-through;
+}
+
+/* Status text is NEVER crossed out */
+.time-slot::after {
+    display: block;
+    font-size: 9px;
+    margin-top: 4px;
+    text-decoration: none !important;
+    font-weight: 600;
+}
+
+.time-slot:not(.unavailable):not(.booked)::after {
+    content: "Available";
+    color: #4a4a4a;
+}
+
+.time-slot.booked::after {
+    content: "Booked";
+    color: #999;
+}
+
+.time-slot.unavailable::after {
+    content: "Booked";
+    color: #999;
+}
+
+/* =========================
+   BOOKED
+========================= */
+
+.time-slot.booked {
+    background: #f5f5f5;
+    color: #999;
+    border-color: #ddd;
+    cursor: not-allowed;
+}
+
+/* =========================
+   UNAVAILABLE
+========================= */
+
+.time-slot.unavailable {
+    background: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+    border-color: #ddd;
+}
+
+/* =========================
+   NORMAL TIME SLOT HOVER
+========================= */
+
+.time-slot:hover:not(:disabled):not(.booked):not(.unavailable) {
+    border-color: #0067b8;
+    background: #f5faff;
+}
+
+/* =========================
+   SELECTED TIME
+========================= */
+
+.time-slot.selected {
+    background: #0067b8;
+    border-color: #0067b8;
+    color: white;
+}
+
+.time-slot.selected .time-label {
+    text-decoration: none;
+}
+
+.time-slot.selected::after {
+    color: white;
+}
+
+/* When cursor is over selected time,
+   both time and Available become black */
+
+.time-slot.selected:hover {
+    color: black;
+}
+
+.time-slot.selected:hover::after {
+    color: black;
+}
+
+/* =========================
+   TIME NOTE
+========================= */
+
+.time-note {
+    margin-top: 15px;
+    font-size: 12px;
+    color: #616161;
+}
+
+/* =========================
+   FORM
+========================= */
+
+.form-section {
+    padding: 30px;
+    border-top: 1px solid #e1e1e1;
+}
+
+.form-section h3 {
+    font-size: 17px;
+    margin: 0 0 22px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 25px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+label {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+.required {
+    color: #c50f1f;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    border: 1px solid #a19f9d;
+    padding: 10px 11px;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 13px;
+    background: white;
+    outline: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #0067b8;
+    box-shadow: 0 0 0 1px #0067b8;
+}
+
+textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.equipment {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 25px;
+}
+
+.check-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.check-item input {
+    width: auto;
+}
+
+.form-footer {
+    margin-top: 28px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 22px;
+    border-top: 1px solid #e1e1e1;
+}
+
+.cancel-button,
+.book-button {
+    padding: 10px 23px;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.cancel-button {
+    border: 1px solid #a19f9d;
+    background: white;
+}
+
+.book-button {
+    border: none;
+    background: #0067b8;
+    color: white;
+}
+
+.book-button:hover {
+    background: #005a9e;
+}
+
+/* =========================
+   CANCELLATION SECTION
+========================= */
+
+.management-section {
+    margin-top: 24px;
+    background: white;
+    border: 1px solid #e1e1e1;
+}
+
+.management-header {
+    padding: 23px 30px;
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.management-header h2 {
+    margin: 0 0 6px;
+    font-size: 19px;
+    font-weight: 600;
+}
+
+.management-header p {
+    margin: 0;
+    font-size: 13px;
+    color: #616161;
+}
+
+.cancellation-content {
+    padding: 25px 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+}
+
+.cancel-info {
+    background: #f7f7f7;
+    padding: 18px;
+    font-size: 13px;
+    color: #616161;
+    line-height: 1.6;
+}
+
+.cancel-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.cancel-form .full {
+    grid-column: 1 / -1;
+}
+
+.cancel-booking-button {
+    background: #c50f1f;
+    color: white;
+    border: none;
+    padding: 11px 20px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+}
+
+.cancel-booking-button:hover {
+    background: #a80000;
+}
+
+/* =========================
+   ADMINISTRATOR CONTACT
+========================= */
+
+.admin-section {
+    margin-top: 24px;
+    background: white;
+    border: 1px solid #e1e1e1;
+}
+
+.admin-header {
+    padding: 23px 30px;
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.admin-header h2 {
+    margin: 0 0 6px;
+    font-size: 19px;
+    font-weight: 600;
+}
+
+.admin-header p {
+    margin: 0;
+    font-size: 13px;
+    color: #616161;
+}
+
+.admin-content {
+    padding: 25px 30px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.admin-card {
+    border: 1px solid #e1e1e1;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.admin-icon {
+    width: 38px;
+    height: 38px;
+    background: #f3f7fb;
+    color: #0067b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+}
+
+.admin-card strong {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.admin-card span,
+.admin-card a {
+    font-size: 13px;
+    color: #616161;
+    text-decoration: none;
+}
+
+.admin-card a:hover {
+    color: #0067b8;
+}
+
+/* =========================
+   ROOM RULES
+========================= */
+
+.rules {
+    margin-top: 24px;
+    padding: 22px 25px;
+    background: #fafafa;
+    border: 1px solid #e1e1e1;
+}
+
+.rules h3 {
+    margin: 0 0 12px;
+    font-size: 15px;
+}
+
+.rules ul {
+    margin: 0;
+    padding-left: 20px;
+    color: #616161;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.38);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-box {
+    width: 460px;
+    max-width: calc(100% - 30px);
+    background: white;
+    padding: 35px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.2);
+}
+
+.success-icon {
+    width: 48px;
+    height: 48px;
+    background: #107c10;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+
+.warning-icon {
+    width: 48px;
+    height: 48px;
+    background: #c50f1f;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    margin-bottom: 20px;
+}
+
+.modal-box h2 {
+    margin: 0 0 8px;
+    font-size: 21px;
+}
+
+.modal-box p {
+    font-size: 13px;
+    color: #616161;
+    line-height: 1.6;
+}
+
+.reference {
+    margin: 18px 0;
+    padding: 14px;
+    background: #f5f5f5;
+    font-size: 13px;
+}
+
+.modal-button {
+    width: 100%;
+    background: #0067b8;
+    color: white;
+    border: none;
+    padding: 11px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+/* =========================
+   NAVIGATION MODALS
+========================= */
+
+.nav-modal-content {
+    max-width: 520px;
+}
+
+.settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 14px 0;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 13px;
+}
+
+.settings-row:last-child {
+    border-bottom: none;
+}
+
+.settings-row select {
+    width: 180px;
+}
+
+.help-list {
+    margin: 0;
+    padding-left: 20px;
+    color: #616161;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.login-note {
+    background: #f7f7f7;
+    padding: 12px;
+    font-size: 12px;
+    color: #616161;
+    margin-top: 12px;
+    line-height: 1.5;
+}
+
+/* =========================
+   TIME SELECTION ENHANCEMENTS
+========================= */
+
+.time-instructions {
+    margin: -5px 0 15px;
+    font-size: 12px;
+    color: #616161;
+    line-height: 1.5;
+}
+
+.selection-summary {
+    margin-top: 18px;
+    border: 1px solid #d9d9d9;
+    background: #fafafa;
+    padding: 14px;
+}
+
+.selection-summary-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 9px;
+}
+
+.selection-summary-header strong {
+    font-size: 13px;
+}
+
+.clear-time {
+    border: 1px solid #a19f9d;
+    background: white;
+    padding: 5px 9px;
+    font-family: inherit;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.clear-time:hover {
+    background: #f5f5f5;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 4px 0;
+    font-size: 12px;
+}
+
+.summary-row span:last-child {
+    font-weight: 600;
+    text-align: right;
+}
+
+.time-slot.start,
+.time-slot.end {
+    position: relative;
+}
+
+/* START and END labels */
+
+.time-slot.start::before {
+    content: "START";
+    position: absolute;
+    top: 3px;
+    right: 5px;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: .4px;
+}
+
+.time-slot.end::before {
+    content: "END";
+    position: absolute;
+    top: 3px;
+    right: 5px;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: .4px;
+}
+
+.calendar td.past {
+    color: #b5b5b5;
+    cursor: not-allowed;
+}
+
+.calendar td.past:hover {
+    background: transparent;
+}
+
+.calendar td.no-availability {
+    color: #b5b5b5;
+    cursor: not-allowed;
+    background: #fafafa;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 850px) {
+
+    .room-card {
+        grid-template-columns: 1fr;
+    }
+
+    .booking-content {
+        grid-template-columns: 1fr;
+    }
+
+    .time-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .calendar-section {
+        border-right: none;
+        border-bottom: 1px solid #e1e1e1;
+    }
+
+    .cancellation-content {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-content {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .top-title {
+        display: none;
+    }
+
+    .page {
+        padding: 25px 12px;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+
+    .cancel-form {
+        grid-template-columns: 1fr;
+    }
+
+    .cancel-form .full {
+        grid-column: auto;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     TOP BAR
+========================= -->
+
+<div class="topbar">
+
+    <img src="oag-fiji-logo.jpg"
+         alt="Office of the Auditor-General Fiji logo"
+         class="oag-logo">
+
+    <div class="brand">
+        Office of the Auditor-General
+    </div>
+
+    <div class="top-title">
+        Conference Room Booking
+    </div>
+
+    <div class="top-right">
+
+        <button type="button"
+                class="top-link"
+                onclick="openHelp()">
+            Help
+        </button>
+
+        <button type="button"
+                class="top-link"
+                onclick="openSettings()">
+            Settings
+        </button>
+
+        <button type="button"
+                class="profile"
+                onclick="openLogin()">
+            OAG
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="page">
+
+    <div class="page-heading">
+
+        <h1>OAG CONFERENCE ROOM BOOKING</h1>
+
+        <p>
+            Book the Office of the Auditor-General conference room
+            for your official meeting.
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         ROOM INFORMATION
+    ========================= -->
+
+    <section class="room-card">
+
+        <div class="room-image"></div>
+
+        <div class="room-information">
+
+            <div class="room-selector">
+
+                <label for="roomSelect">
+                    Select room
+                </label>
+
+                <select id="roomSelect"
+                        onchange="changeRoom(this.value)">
+
+                    <option value="conference1">
+                        Conference Room 1
+                    </option>
+
+                    <option value="meeting1">
+                        Meeting Room 1
+                    </option>
+
+                    <option value="meeting2">
+                        Meeting Room 2
+                    </option>
+
+                    <option value="meeting3">
+                        Meeting Room 3
+                    </option>
+
+                </select>
+
+            </div>
+
+            <h2 id="roomName" style="margin-bottom: 20px;">
+                OAG Conference Room
+            </h2>
+
+            <div class="details-grid">
+
+                <div class="detail">
+
+                    <div class="detail-icon">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <circle cx="9" cy="8" r="3"></circle>
+
+                            <path d="M3.5 19c.5-3 2.3-5 5.5-5s5 2 5.5 5"></path>
+
+                            <circle cx="17" cy="9" r="2.3"></circle>
+
+                            <path d="M15.5 14.5c2.7.1 4.3 1.7 5 4"></path>
+
+                        </svg>
+
+                    </div>
+
+                    <div>
+
+                        <strong>Capacity</strong>
+
+                        <span id="roomCapacity">
+                            Up to 20 people
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-icon">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0z"></path>
+
+                            <circle cx="12" cy="10" r="2.5"></circle>
+
+                        </svg>
+
+                    </div>
+
+                    <div>
+
+                        <strong>Location</strong>
+
+                        <span id="roomLocation">
+                            OAG Office – Conference Room 1
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-icon">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <rect x="3" y="4" width="18" height="13" rx="1"></rect>
+
+                            <path d="M8 21h8"></path>
+
+                            <path d="M12 17v4"></path>
+
+                        </svg>
+
+                    </div>
+
+                    <div>
+
+                        <strong>Display</strong>
+
+                        <span id="roomDisplay">
+                            Projector / Display Screen
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-icon">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <rect x="3" y="6" width="13" height="12" rx="2"></rect>
+
+                            <path d="M16 10l5-3v10l-5-3z"></path>
+
+                        </svg>
+
+                    </div>
+
+                    <div>
+
+                        <strong>Video Conferencing</strong>
+
+                        <span id="roomVideo">
+                            Microsoft Teams equipment
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-icon">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <rect x="8" y="3" width="8" height="12" rx="4"></rect>
+
+                            <path d="M5 11a7 7 0 0 0 14 0"></path>
+
+                            <path d="M12 18v3"></path>
+
+                            <path d="M8 21h8"></path>
+
+                        </svg>
+
+                    </div>
+
+                    <div>
+
+                        <strong>Audio</strong>
+
+                        <span id="roomAudio">
+                            Microphone and speakers
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-icon">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <path d="M4 9.5a12 12 0 0 1 16 0"></path>
+
+                            <path d="M7 13a7.5 7.5 0 0 1 10 0"></path>
+
+                            <path d="M10 16.5a3.5 3.5 0 0 1 4 0"></path>
+
+                            <circle cx="12" cy="20" r="1"></circle>
+
+                        </svg>
+
+                    </div>
+
+                    <div>
+
+                        <strong>Connectivity</strong>
+
+                        <span id="roomConnectivity">
+                            Wi-Fi available
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         BOOKING
+    ========================= -->
+
+    <section class="booking-container">
+
+        <div class="booking-header">
+
+            <h2 id="bookingRoomHeading">
+                Book the conference room
+            </h2>
+
+            <p>
+                Select a date and available time, then provide your meeting details.
+            </p>
+
+        </div>
+
+
+        <div class="booking-content">
+
+
+            <!-- CALENDAR -->
+
+            <div class="calendar-section">
+
+                <div class="section-label">
+                    Select a date
+                </div>
+
+                <div class="month-navigation">
+
+                    <button class="nav-button"
+                            onclick="previousMonth()">
+                        ‹
+                    </button>
+
+                    <strong id="monthYear"></strong>
+
+                    <button class="nav-button"
+                            onclick="nextMonth()">
+                        ›
+                    </button>
+
+                </div>
+
+
+                <table class="calendar">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Sun</th>
+                            <th>Mon</th>
+                            <th>Tue</th>
+                            <th>Wed</th>
+                            <th>Thu</th>
+                            <th>Fri</th>
+                            <th>Sat</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="calendarBody"></tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- TIME -->
+
+            <div class="time-section">
+
+                <div class="section-label">
+                    Available times
+                </div>
+
+                <div class="selected-date"
+                     id="selectedDateText">
+
+                    Select a date from the calendar
+
+                </div>
+
+
+                <div class="time-instructions">
+
+                    Select your starting hour, then select the ending hour.
+                    Multiple consecutive hours can be booked in one booking.
+
+                </div>
+
+
+                <div class="time-grid">
+
+                    <button class="time-slot"
+                            data-index="0"
+                            data-start="8:00 AM"
+                            data-end="9:00 AM"
+                            onclick="selectTime(this)">
+
+                        <span class="time-label">
+                            8:00 AM – 9:00 AM
+                        </span>
+
+                    </button>
+
+
+                    <button class="time-slot"
+                            data-index="1"
+                            data-start="9:00 AM"
+                            data-end="10:00 AM"
+                            onclick="selectTime(this)">
+
+                        <span class="time-label">
+                            9:00 AM – 10:00 AM
+                        </span>
+
+                    </button>
+
+
+                    <button class="time-slot"
+                            data-index="2"
+                            data-start="10:00 AM"
+                            data-end="11:00 AM"
+                            onclick="selectTime(this)">
+
+                        <span class="time-label">
+                            10:00 AM – 11:00 AM
+                        </span>
+
+                    </button>
+
+
+                    <button class="time-slot"
+                            data-index="3"
+                            data-start="11:00 AM"
+                            data-end="12:00 PM"
+                            onclick="selectTime(this)">
+
+                        <span class="time-label">
+                            11:00 AM – 12:00 PM
+                        </span>
+
+                    </button>
+
+
+                    <button class="time-slot"
+                            data-index="4"
+                            data-start="12:00 PM"
+                            data-end="1:00 PM"
+                            onclick="selectTime(this)">
+
+                        <span class="time-label">
+                            12:00 PM – 1:00 PM
+                        </span>
+
+                    </button>
+
+
+                    <!-- BOOKED DEMONSTRATION SLOT -->
+
+                    <button class="time-slot"
+                            data-index="5"
+                            data-start="1:00 PM"
+                            data-end="2:00 PM">
+
+                        <span class="time-label">
+                            1:00 PM – 2:00 PM
+                        </span>
+
+                    </button>
+
+
+                    <button class="time-slot"
+                            data-index="6"
+                            data-start="2:00 PM"
+                            data-end="3:00 PM"
+                            onclick="selectTime(this)">
+
+                        <span class="time-label">
+                            2:00 PM – 3:00 PM
+                        </span>
+
+                    </button>
+
+
+                    <!-- 3PM - 4PM IS AVAILABLE -->
+
+                    <button class="time-slot"
+                            data-index="7"
+                            data-start="3:00 PM"
+                            data-end="4:00 PM"
+                            onclick="selectTime(this)">
+
+                        <span class="time-label">
+                            3:00 PM – 4:00 PM
+                        </span>
+
+                    </button>
+
+
+                    <button class="time-slot"
+                            data-index="8"
+                            data-start="4:00 PM"
+                            data-end="5:00 PM"
+                            onclick="selectTime(this)">
+
+                        <span class="time-label">
+                            4:00 PM – 5:00 PM
+                        </span>
+
+                    </button>
+
+                </div>
+
+
+                <div class="selection-summary">
+
+                    <div class="selection-summary-header">
+
+                        <strong>
+                            Booking time summary
+                        </strong>
+
+                        <button type="button"
+                                class="clear-time"
+                                onclick="clearTimeSelection()">
+
+                            Clear
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span>
+                            Selected time
+                        </span>
+
+                        <span id="selectedTimeSummary">
+                            No hours selected
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span>
+                            Duration
+                        </span>
+
+                        <span id="selectedDuration">
+                            0 hours
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="time-note">
+
+                    Times shown are based on the conference room's availability.
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             MEETING FORM
+        ========================= -->
+
+        <div class="form-section">
+
+            <h3>
+                Meeting details
+            </h3>
+
+            <form id="bookingForm">
+
+
+                <div class="form-grid">
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Staff name
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="staffName"
+                            placeholder="Enter your full name"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Email address
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="name@oag.gov.fj"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Department / Unit
+                            <span class="required">*</span>
+                        </label>
+
+                        <select id="department" required>
+
+                            <option value="">
+                                Select department
+                            </option>
+
+                            <option>Information Technology</option>
+                            <option>Finance</option>
+                            <option>Human Resources</option>
+                            <option>Audit</option>
+                            <option>Corporate Services</option>
+                            <option>Administration</option>
+                            <option>Other</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- DYNAMIC ATTENDEE CAPACITY -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Number of attendees
+                            <span class="required">*</span>
+                        </label>
+
+                        <select id="attendees" required>
+
+                            <option value="">
+                                Select number
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label>
+                            Meeting title / purpose
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="meetingTitle"
+                            placeholder="e.g. IT Department Meeting"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            External visitors
+                        </label>
+
+                        <select id="externalVisitors">
+
+                            <option>No</option>
+                            <option>Yes</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Meeting type
+                        </label>
+
+                        <select id="meetingType">
+
+                            <option>Internal meeting</option>
+                            <option>Management meeting</option>
+                            <option>Training</option>
+                            <option>Interview</option>
+                            <option>Presentation</option>
+                            <option>Other</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label>
+                            Equipment required
+                        </label>
+
+                        <div class="equipment">
+
+                            <label class="check-item">
+
+                                <input type="checkbox">
+
+                                Display Screen
+
+                            </label>
+
+
+                            <label class="check-item">
+
+                                <input type="checkbox">
+
+                                Microsoft Teams
+
+                            </label>
+
+
+                            <label class="check-item">
+
+                                <input type="checkbox">
+
+                                Microphone
+
+                            </label>
+
+
+                            <label class="check-item">
+
+                                <input type="checkbox">
+
+                                Speakers
+
+                            </label>
+
+
+                            <label class="check-item">
+
+                                <input type="checkbox">
+
+                                Other
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label>
+                            Additional requirements
+                        </label>
+
+                        <textarea
+                            id="requirements"
+                            placeholder="Enter any additional information or requirements..."></textarea>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="form-footer">
+
+                    <button
+                        type="button"
+                        class="cancel-button"
+                        onclick="resetForm()">
+
+                        Cancel
+
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="book-button">
+
+                        Book
+
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         CANCEL BOOKING
+    ========================= -->
+
+    <section class="management-section">
+
+        <div class="management-header">
+
+            <h2>
+                Manage or cancel your booking
+            </h2>
+
+            <p>
+                Already have a booking? Use your booking reference to cancel it.
+            </p>
+
+        </div>
+
+
+        <div class="cancellation-content">
+
+
+            <div class="cancel-info">
+
+                <strong>Need to cancel?</strong>
+
+                <br><br>
+
+                Enter the booking reference that was provided when
+                your conference room booking was confirmed.
+
+                <br><br>
+
+                For security, you will also need to enter the email
+                address used when making the booking.
+
+                <br><br>
+
+                <strong>Example:</strong>
+                OAG-123456
+
+            </div>
+
+
+            <div>
+
+                <form class="cancel-form"
+                      id="cancellationForm">
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Booking reference
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="cancelReference"
+                            placeholder="OAG-123456"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Email address
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="email"
+                            id="cancelEmail"
+                            placeholder="name@oag.gov.fj"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <button
+                            type="submit"
+                            class="cancel-booking-button">
+
+                            Cancel Booking
+
+                        </button>
+
+                    </div>
+
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         ADMINISTRATOR CONTACT
+    ========================= -->
+
+    <section class="admin-section">
+
+        <div class="admin-header">
+
+            <h2>
+                Contact Administrator
+            </h2>
+
+            <p>
+                Contact the conference room administrator if you need
+                assistance with a booking or room availability.
+            </p>
+
+        </div>
+
+
+        <div class="admin-content">
+
+
+            <div class="admin-card">
+
+                <div class="admin-icon">
+                    👤
+                </div>
+
+                <div>
+
+                    <strong>
+                        Administrator
+                    </strong>
+
+                    <span>
+                        Naikelekeletabua Wara
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-card">
+
+                <div class="admin-icon">
+                    ✉
+                </div>
+
+                <div>
+
+                    <strong>
+                        Email
+                    </strong>
+
+                    <a href="mailto:n.wara@auditorgeneral.gov.fj">
+                        n.wara@auditorgeneral.gov.fj
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-card">
+
+                <div class="admin-icon">
+                    ☎
+                </div>
+
+                <div>
+
+                    <strong>
+                        Phone
+                    </strong>
+
+                    <span>
+                        +679 8921531
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         ROOM RULES
+    ========================= -->
+
+    <section class="rules">
+
+        <h3>
+            Conference room guidelines
+        </h3>
+
+        <ul>
+
+            <li>
+                Please leave the room clean and tidy after use.
+            </li>
+
+            <li>
+                Bookings should be made only for official OAG business.
+            </li>
+
+            <li>
+                Please cancel the booking if the room is no longer required.
+            </li>
+
+            <li>
+                Do not exceed the maximum room capacity of 20 people.
+            </li>
+
+            <li>
+                Ensure all equipment is switched off after the meeting.
+            </li>
+
+        </ul>
+
+    </section>
+
+</main>
+
+
+<!-- =========================
+     BOOKING CONFIRMATION MODAL
+========================= -->
+
+<div class="modal" id="confirmation">
+
+    <div class="modal-box">
+
+        <div class="success-icon">
+            ✓
+        </div>
+
+        <h2>
+            Booking confirmed
+        </h2>
+
+        <p>
+            Your conference room booking has been successfully submitted.
+        </p>
+
+        <div class="reference">
+
+            <strong>Booking reference:</strong>
+            <span id="bookingReference"></span>
+
+            <br><br>
+
+            <strong>Date:</strong>
+            <span id="confirmationDate"></span>
+
+            <br><br>
+
+            <strong>Time:</strong>
+            <span id="confirmationTime"></span>
+
+            <br><br>
+
+            <strong>Duration:</strong>
+            <span id="confirmationDuration"></span>
+
+            <br><br>
+
+            <strong>Meeting:</strong>
+            <span id="confirmationTitle"></span>
+
+            <br><br>
+
+            <strong>Attendees:</strong>
+            <span id="confirmationAttendees"></span>
+
+            <br><br>
+
+            <strong>Room:</strong>
+            <span id="confirmationRoom"></span>
+
+        </div>
+
+        <p>
+            A confirmation would normally be sent to your Microsoft 365
+            email account.
+        </p>
+
+        <button
+            class="modal-button"
+            onclick="closeConfirmation()">
+
+            Done
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     CANCELLATION CONFIRMATION
+========================= -->
+
+<div class="modal" id="cancelConfirmation">
+
+    <div class="modal-box">
+
+        <div class="warning-icon">
+            !
+        </div>
+
+        <h2>
+            Booking cancelled
+        </h2>
+
+        <p>
+            Your conference room booking has been successfully cancelled.
+        </p>
+
+        <div class="reference">
+
+            <strong>Booking reference:</strong>
+            <span id="cancelledReference"></span>
+
+        </div>
+
+        <p>
+            A cancellation confirmation would normally be sent to
+            the email address associated with the booking.
+        </p>
+
+        <button
+            class="modal-button"
+            onclick="closeCancellation()">
+
+            Done
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     HELP MODAL
+========================= -->
+
+<div class="modal" id="helpModal">
+
+    <div class="modal-box nav-modal-content">
+
+        <h2>
+            Help
+        </h2>
+
+        <p>
+            Use the conference room booking system to select a room,
+            choose an available date and time, and submit your meeting details.
+        </p>
+
+        <ul class="help-list">
+
+            <li>
+                Select the required conference or meeting room.
+            </li>
+
+            <li>
+                Select an available date from the calendar.
+            </li>
+
+            <li>
+                Select the starting and ending hours for your meeting.
+            </li>
+
+            <li>
+                Complete all required meeting details.
+            </li>
+
+            <li>
+                Select the number of attendees according to the room capacity.
+            </li>
+
+            <li>
+                Click Book to submit the booking.
+            </li>
+
+            <li>
+                Use your booking reference and email address to manage or
+                cancel a booking.
+            </li>
+
+        </ul>
+
+        <br>
+
+        <button
+            type="button"
+            class="modal-button"
+            onclick="closeNavModal('helpModal')">
+
+            Close
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     SETTINGS MODAL
+========================= -->
+
+<div class="modal" id="settingsModal">
+
+    <div class="modal-box nav-modal-content">
+
+        <h2>
+            Settings
+        </h2>
+
+        <p>
+            Adjust the display settings for the booking page.
+        </p>
+
+
+        <div class="settings-row">
+
+            <span>
+                Time format
+            </span>
+
+            <select id="timeFormat"
+                    onchange="changeTimeFormat(this.value)">
+
+                <option value="12">
+                    12-hour
+                </option>
+
+                <option value="24">
+                    24-hour
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="settings-row">
+
+            <span>
+                Show booking instructions
+            </span>
+
+            <select id="showInstructions"
+                    onchange="toggleInstructions()">
+
+                <option value="yes">
+                    Yes
+                </option>
+
+                <option value="no">
+                    No
+                </option>
+
+            </select>
+
+        </div>
+
+        <br>
+
+        <button
+            type="button"
+            class="modal-button"
+            onclick="closeNavModal('settingsModal')">
+
+            Done
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     LOGIN MODAL
+========================= -->
+
+<div class="modal" id="loginModal">
+
+    <div class="modal-box nav-modal-content">
+
+        <h2>
+            OAG Sign in
+        </h2>
+
+        <p>
+            Sign in using your OAG account.
+        </p>
+
+
+        <div class="form-group">
+
+            <label>
+                Email address
+            </label>
+
+            <input
+                type="email"
+                id="loginEmail"
+                placeholder="name@oag.gov.fj">
+
+        </div>
+
+
+        <br>
+
+
+        <div class="form-group">
+
+            <label>
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="loginPassword"
+                placeholder="Enter your password">
+
+        </div>
+
+
+        <div class="login-note">
+
+            This demonstration page does not connect to Microsoft 365
+            authentication. Real OAG sign-in would require Microsoft 365 /
+            Azure authentication to be connected to the website.
+
+        </div>
+
+
+        <br>
+
+
+        <button
+            type="button"
+            class="modal-button"
+            onclick="loginDemo()">
+
+            Sign in
+
+        </button>
+
+
+        <br><br>
+
+
+        <button
+            type="button"
+            class="clear-time"
+            style="width:100%; padding:10px;"
+            onclick="closeNavModal('loginModal')">
+
+            Cancel
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   VARIABLES
+========================= */
+
+let currentDate = new Date();
+
+currentDate.setDate(1);
+
+let selectedDate = null;
+
+let selectedSlots = [];
+
+let selectedRoom = "conference1";
+
+
+/* =========================
+   ROOM DATA
+========================= */
+
+const roomData = {
+
+    conference1: {
+
+        name: "OAG Conference Room",
+
+        shortName: "Conference Room 1",
+
+        location: "OAG Office – Conference Room 1",
+
+        capacity: 20,
+
+        display: "Projector / Display Screen",
+
+        video: "Microsoft Teams equipment",
+
+        audio: "Microphone and speakers",
+
+        connectivity: "Wi-Fi available",
+
+        image: "oag.jpg",
+
+        booked: [5]
+
+    },
+
+
+    meeting1: {
+
+        name: "OAG Meeting Room 1",
+
+        shortName: "Meeting Room 1",
+
+        location: "OAG Office – Meeting Room 1",
+
+        capacity: 8,
+
+        display: "Display Screen",
+
+        video: "Microsoft Teams available",
+
+        audio: "Speakers available",
+
+        connectivity: "Wi-Fi available",
+
+        image: "oag.jpg",
+
+        booked: [1, 4]
+
+    },
+
+
+    meeting2: {
+
+        name: "OAG Meeting Room 2",
+
+        shortName: "Meeting Room 2",
+
+        location: "OAG Office – Meeting Room 2",
+
+        capacity: 6,
+
+        display: "Display Screen",
+
+        video: "Microsoft Teams available",
+
+        audio: "Speakers available",
+
+        connectivity: "Wi-Fi available",
+
+        image: "oag.jpg",
+
+        booked: [3, 7]
+
+    },
+
+
+    meeting3: {
+
+        name: "OAG Meeting Room 3",
+
+        shortName: "Meeting Room 3",
+
+        location: "OAG Office – Meeting Room 3",
+
+        capacity: 6,
+
+        display: "Display Screen",
+
+        video: "Microsoft Teams available",
+
+        audio: "Speakers available",
+
+        connectivity: "Wi-Fi available",
+
+        image: "oag.jpg",
+
+        booked: [0, 5]
+
+    }
+
+};
+
+
+function getCurrentRoom() {
+
+    return roomData[selectedRoom];
+
+}
+
+
+/* =========================
+   ATTENDEE OPTIONS
+========================= */
+
+function updateAttendeeOptions() {
+
+    const attendeesSelect =
+        document.getElementById("attendees");
+
+    const capacity =
+        getCurrentRoom().capacity;
+
+    const currentValue =
+        attendeesSelect.value;
+
+    attendeesSelect.innerHTML =
+        '<option value="">Select number</option>';
+
+    for (
+        let i = 1;
+        i <= capacity;
+        i++
+    ) {
+
+        const option =
+            document.createElement("option");
+
+        option.value = i;
+
+        option.textContent = i;
+
+        attendeesSelect.appendChild(option);
+
+    }
+
+    if (
+        currentValue &&
+        parseInt(currentValue) <= capacity
+    ) {
+
+        attendeesSelect.value =
+            currentValue;
+
+    }
+
+}
+
+
+/* =========================
+   LOCAL BOOKINGS
+========================= */
+
+function getBookings() {
+
+    try {
+
+        return JSON.parse(
+
+            localStorage.getItem(
+                "oagConferenceBookings"
+            )
+
+        ) || [];
+
+    }
+
+    catch (error) {
+
+        return [];
+
+    }
+
+}
+
+
+function saveBookings(bookings) {
+
+    localStorage.setItem(
+
+        "oagConferenceBookings",
+
+        JSON.stringify(bookings)
+
+    );
+
+}
+
+
+function dateKey(date) {
+
+    return [
+
+        date.getFullYear(),
+
+        String(
+            date.getMonth() + 1
+        ).padStart(2, "0"),
+
+        String(
+            date.getDate()
+        ).padStart(2, "0")
+
+    ].join("-");
+
+}
+
+
+function isSlotBooked(index) {
+
+    if (!selectedDate) {
+
+        return false;
+
+    }
+
+    return getBookings().some(
+        booking =>
+
+            booking.date ===
+            dateKey(selectedDate)
+
+            &&
+
+            booking.roomId ===
+            selectedRoom
+
+            &&
+
+            booking.slotIndexes.includes(
+                index
+            )
+    );
+
+}
+
+
+function isDateFullyUnavailable(date) {
+
+    const room =
+        getCurrentRoom();
+
+    const unavailable =
+        new Set([
+            ...room.booked
+        ]);
+
+
+    getBookings().forEach(
+        booking => {
+
+            if (
+
+                booking.date ===
+                dateKey(date)
+
+                &&
+
+                booking.roomId ===
+                selectedRoom
+
+            ) {
+
+                booking.slotIndexes.forEach(
+                    index =>
+                        unavailable.add(index)
+                );
+
+            }
+
+        }
+    );
+
+
+    return unavailable.size >= 9;
+
+}
+
+
+/* =========================
+   CHANGE ROOM
+========================= */
+
+function changeRoom(roomId) {
+
+    if (!roomData[roomId]) {
+
+        return;
+
+    }
+
+
+    selectedRoom = roomId;
+
+    selectedDate = null;
+
+    selectedSlots = [];
+
+
+    const room =
+        getCurrentRoom();
+
+
+    document.getElementById(
+        "roomName"
+    ).textContent =
+        room.name;
+
+
+    document.getElementById(
+        "roomLocation"
+    ).textContent =
+        room.location;
+
+
+    document.getElementById(
+        "roomCapacity"
+    ).textContent =
+        "Up to " +
+        room.capacity +
+        " people";
+
+
+    document.getElementById(
+        "roomDisplay"
+    ).textContent =
+        room.display;
+
+
+    document.getElementById(
+        "roomVideo"
+    ).textContent =
+        room.video;
+
+
+    document.getElementById(
+        "roomAudio"
+    ).textContent =
+        room.audio;
+
+
+    document.getElementById(
+        "roomConnectivity"
+    ).textContent =
+        room.connectivity;
+
+
+    document.querySelector(
+        ".room-image"
+    ).style.backgroundImage =
+
+        'linear-gradient(rgba(0,70,120,0.08),rgba(0,70,120,0.08)), url("' +
+        room.image +
+        '")';
+
+
+    document.getElementById(
+        "bookingRoomHeading"
+    ).textContent =
+
+        "Book " +
+        room.shortName;
+
+
+    document.getElementById(
+        "selectedDateText"
+    ).textContent =
+
+        "Select a date from the calendar";
+
+
+    updateAttendeeOptions();
+
+    renderCalendar();
+
+    refreshTimeAvailability();
+
+}
+
+
+/* =========================
+   CALENDAR
+========================= */
+
+function renderCalendar() {
+
+    const year =
+        currentDate.getFullYear();
+
+    const month =
+        currentDate.getMonth();
+
+
+    const monthNames = [
+
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+
+    ];
+
+
+    document.getElementById(
+        "monthYear"
+    ).textContent =
+
+        monthNames[month] +
+        " " +
+        year;
+
+
+    const firstDay =
+        new Date(
+            year,
+            month,
+            1
+        ).getDay();
+
+
+    const daysInMonth =
+        new Date(
+            year,
+            month + 1,
+            0
+        ).getDate();
+
+
+    const today =
+        new Date();
+
+
+    today.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+
+    let html = "";
+
+    let day = 1;
+
+
+    for (
+        let week = 0;
+        week < 6;
+        week++
+    ) {
+
+        html += "<tr>";
+
+
+        for (
+            let weekday = 0;
+            weekday < 7;
+            weekday++
+        ) {
+
+            if (
+
+                (
+                    week === 0 &&
+                    weekday < firstDay
+                )
+
+                ||
+
+                day > daysInMonth
+
+            ) {
+
+                html += "<td></td>";
+
+            }
+
+            else {
+
+                const cellDate =
+                    new Date(
+                        year,
+                        month,
+                        day
+                    );
+
+
+                cellDate.setHours(
+                    0,
+                    0,
+                    0,
+                    0
+                );
+
+
+                let classes = "";
+
+
+                if (
+
+                    day ===
+                    today.getDate()
+
+                    &&
+
+                    month ===
+                    today.getMonth()
+
+                    &&
+
+                    year ===
+                    today.getFullYear()
+
+                ) {
+
+                    classes +=
+                        " today";
+
+                }
+
+
+                if (
+
+                    selectedDate
+
+                    &&
+
+                    day ===
+                    selectedDate.getDate()
+
+                    &&
+
+                    month ===
+                    selectedDate.getMonth()
+
+                    &&
+
+                    year ===
+                    selectedDate.getFullYear()
+
+                ) {
+
+                    classes +=
+                        " selected";
+
+                }
+
+
+                const isPast =
+                    cellDate < today;
+
+
+                const fullyUnavailable =
+                    !isPast &&
+                    isDateFullyUnavailable(
+                        cellDate
+                    );
+
+
+                if (fullyUnavailable) {
+
+                    classes +=
+                        " no-availability";
+
+                }
+
+
+                if (isPast) {
+
+                    classes +=
+                        " past";
+
+
+                    html += `
+
+                        <td class="${classes}">
+                            ${day}
+                        </td>
+
+                    `;
+
+                }
+
+                else {
+
+                    if (fullyUnavailable) {
+
+                        html += `
+
+                            <td
+                                class="${classes}"
+                                title="No availability for this room">
+
+                                ${day}
+
+                            </td>
+
+                        `;
+
+                    }
+
+                    else {
+
+                        html += `
+
+                            <td
+                                class="${classes}"
+                                onclick="selectDate(${year},${month},${day})">
+
+                                ${day}
+
+                            </td>
+
+                        `;
+
+                    }
+
+                }
+
+
+                day++;
+
+            }
+
+        }
+
+
+        html += "</tr>";
+
+
+        if (
+            day > daysInMonth
+        ) {
+
+            break;
+
+        }
+
+    }
+
+
+    document.getElementById(
+        "calendarBody"
+    ).innerHTML =
+        html;
+
+}
+
+
+/* =========================
+   SELECT DATE
+========================= */
+
+function selectDate(
+    year,
+    month,
+    day
+) {
+
+    const chosenDate =
+        new Date(
+            year,
+            month,
+            day
+        );
+
+
+    if (
+        isDateFullyUnavailable(
+            chosenDate
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    selectedDate =
+        chosenDate;
+
+
+    selectedSlots = [];
+
+
+    updateTimeSelection();
+
+
+    const options = {
+
+        weekday: "long",
+
+        year: "numeric",
+
+        month: "long",
+
+        day: "numeric"
+
+    };
+
+
+    document.getElementById(
+        "selectedDateText"
+    ).textContent =
+
+        selectedDate.toLocaleDateString(
+            "en-US",
+            options
+        );
+
+
+    renderCalendar();
+
+    refreshTimeAvailability();
+
+}
+
+
+/* =========================
+   MONTH NAVIGATION
+========================= */
+
+function previousMonth() {
+
+    const now =
+        new Date();
+
+
+    if (
+
+        currentDate.getFullYear() ===
+        now.getFullYear()
+
+        &&
+
+        currentDate.getMonth() ===
+        now.getMonth()
+
+    ) {
+
+        return;
+
+    }
+
+
+    currentDate.setMonth(
+
+        currentDate.getMonth() - 1
+
+    );
+
+
+    renderCalendar();
+
+}
+
+
+function nextMonth() {
+
+    currentDate.setMonth(
+
+        currentDate.getMonth() + 1
+
+    );
+
+
+    renderCalendar();
+
+}
+
+
+/* =========================
+   TIME AVAILABILITY
+========================= */
+
+function refreshTimeAvailability() {
+
+    const room =
+        getCurrentRoom();
+
+
+    document
+        .querySelectorAll(
+            ".time-slot"
+        )
+        .forEach(
+            button => {
+
+                const index =
+                    parseInt(
+                        button.dataset.index
+                    );
+
+
+                button.classList.remove(
+                    "booked",
+                    "unavailable"
+                );
+
+
+                if (
+                    room.booked.includes(
+                        index
+                    )
+                ) {
+
+                    button.classList.add(
+                        "booked"
+                    );
+
+                    button.disabled =
+                        true;
+
+                }
+
+                else if (
+                    isSlotBooked(index)
+                ) {
+
+                    button.classList.add(
+                        "booked"
+                    );
+
+                    button.disabled =
+                        true;
+
+                }
+
+                else {
+
+                    button.disabled =
+                        false;
+
+                }
+
+            }
+        );
+
+
+    updateTimeSelection();
+
+}
+
+
+/* =========================
+   MULTI-HOUR TIME SELECTION
+========================= */
+
+function selectTime(button) {
+
+    if (
+
+        button.classList.contains(
+            "unavailable"
+        )
+
+        ||
+
+        button.classList.contains(
+            "booked"
+        )
+
+        ||
+
+        button.disabled
+
+    ) {
+
+        return;
+
+    }
+
+
+    const clickedIndex =
+        parseInt(
+            button.dataset.index
+        );
+
+
+    if (
+        selectedSlots.length === 0
+    ) {
+
+        selectedSlots = [
+            clickedIndex
+        ];
+
+
+        updateTimeSelection();
+
+        return;
+
+    }
+
+
+    if (
+
+        selectedSlots.length === 1
+
+        &&
+
+        selectedSlots[0] ===
+        clickedIndex
+
+    ) {
+
+        selectedSlots = [];
+
+        updateTimeSelection();
+
+        return;
+
+    }
+
+
+    const firstIndex =
+        Math.min(
+            ...selectedSlots
+        );
+
+
+    const lastIndex =
+        Math.max(
+            ...selectedSlots
+        );
+
+
+    const rangeStart =
+        Math.min(
+            firstIndex,
+            clickedIndex
+        );
+
+
+    const rangeEnd =
+        Math.max(
+            lastIndex,
+            clickedIndex
+        );
+
+
+    const range = [];
+
+
+    for (
+        let index = rangeStart;
+        index <= rangeEnd;
+        index++
+    ) {
+
+        range.push(index);
+
+    }
+
+
+    const hasUnavailableSlot =
+        range.some(
+            index => {
+
+                const slot =
+                    document.querySelector(
+
+                        `.time-slot[data-index="${index}"]`
+
+                    );
+
+
+                return (
+
+                    !slot
+
+                    ||
+
+                    slot.classList.contains(
+                        "unavailable"
+                    )
+
+                    ||
+
+                    slot.classList.contains(
+                        "booked"
+                    )
+
+                );
+
+            }
+        );
+
+
+    if (hasUnavailableSlot) {
+
+        alert(
+
+            "Please select consecutive available hours. " +
+            "The selected period cannot include an unavailable hour."
+
+        );
+
+        return;
+
+    }
+
+
+    selectedSlots =
+        range;
+
+
+    updateTimeSelection();
+
+}
+
+
+/* =========================
+   UPDATE TIME SELECTION
+========================= */
+
+function updateTimeSelection() {
+
+    document
+        .querySelectorAll(
+            ".time-slot"
+        )
+        .forEach(
+            slot => {
+
+                slot.classList.remove(
+                    "selected",
+                    "start",
+                    "end"
+                );
+
+
+                const index =
+                    parseInt(
+                        slot.dataset.index
+                    );
+
+
+                if (
+                    selectedSlots.includes(
+                        index
+                    )
+                ) {
+
+                    slot.classList.add(
+                        "selected"
+                    );
+
+                }
+
+            }
+        );
+
+
+    if (
+        selectedSlots.length > 0
+    ) {
+
+        const first =
+            Math.min(
+                ...selectedSlots
+            );
+
+
+        const last =
+            Math.max(
+                ...selectedSlots
+            );
+
+
+        const firstButton =
+            document.querySelector(
+
+                `.time-slot[data-index="${first}"]`
+
+            );
+
+
+        const lastButton =
+            document.querySelector(
+
+                `.time-slot[data-index="${last}"]`
+
+            );
+
+
+        if (firstButton) {
+
+            firstButton.classList.add(
+                "start"
+            );
+
+        }
+
+
+        if (lastButton) {
+
+            lastButton.classList.add(
+                "end"
+            );
+
+        }
+
+
+        const startTime =
+            firstButton.dataset.start;
+
+
+        const endTime =
+            lastButton.dataset.end;
+
+
+        const duration =
+            selectedSlots.length;
+
+
+        document.getElementById(
+            "selectedTimeSummary"
+        ).textContent =
+
+            startTime +
+            " – " +
+            endTime;
+
+
+        document.getElementById(
+            "selectedDuration"
+        ).textContent =
+
+            duration +
+
+            (
+                duration === 1
+                ? " hour"
+                : " hours"
+            );
+
+    }
+
+    else {
+
+        document.getElementById(
+            "selectedTimeSummary"
+        ).textContent =
+            "No hours selected";
+
+
+        document.getElementById(
+            "selectedDuration"
+        ).textContent =
+            "0 hours";
+
+    }
+
+}
+
+
+/* =========================
+   CLEAR TIME
+========================= */
+
+function clearTimeSelection() {
+
+    selectedSlots = [];
+
+    updateTimeSelection();
+
+}
+
+
+/* =========================
+   BOOKING FORM
+========================= */
+
+document
+    .getElementById(
+        "bookingForm"
+    )
+    .addEventListener(
+        "submit",
+        function(event) {
+
+            event.preventDefault();
+
+
+            if (!selectedDate) {
+
+                alert(
+                    "Please select a booking date."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                selectedSlots.length === 0
+            ) {
+
+                alert(
+                    "Please select at least one available hour."
+                );
+
+                return;
+
+            }
+
+
+            const attendees =
+                parseInt(
+
+                    document.getElementById(
+                        "attendees"
+                    ).value
+
+                );
+
+
+            if (!attendees) {
+
+                alert(
+                    "Please select the number of attendees."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                attendees >
+                getCurrentRoom().capacity
+            ) {
+
+                alert(
+
+                    "The selected room has a maximum capacity of " +
+
+                    getCurrentRoom().capacity +
+
+                    " people."
+
+                );
+
+                return;
+
+            }
+
+
+            const staffName =
+                document.getElementById(
+                    "staffName"
+                )
+                .value
+                .trim();
+
+
+            const email =
+                document.getElementById(
+                    "email"
+                )
+                .value
+                .trim();
+
+
+            const meetingTitle =
+                document.getElementById(
+                    "meetingTitle"
+                )
+                .value
+                .trim();
+
+
+            if (
+
+                !staffName ||
+                !email ||
+                !meetingTitle
+
+            ) {
+
+                alert(
+                    "Please complete all required meeting details."
+                );
+
+                return;
+
+            }
+
+
+            const first =
+                Math.min(
+                    ...selectedSlots
+                );
+
+
+            const last =
+                Math.max(
+                    ...selectedSlots
+                );
+
+
+            const firstButton =
+                document.querySelector(
+
+                    `.time-slot[data-index="${first}"]`
+
+                );
+
+
+            const lastButton =
+                document.querySelector(
+
+                    `.time-slot[data-index="${last}"]`
+
+                );
+
+
+            const timeRange =
+
+                firstButton.dataset.start +
+
+                " – " +
+
+                lastButton.dataset.end;
+
+
+            const duration =
+                selectedSlots.length;
+
+
+            const reference =
+
+                "OAG-" +
+
+                Math.floor(
+
+                    100000 +
+                    Math.random() *
+                    900000
+
+                );
+
+
+            const booking = {
+
+                reference:
+                    reference,
+
+                date:
+                    dateKey(
+                        selectedDate
+                    ),
+
+                roomId:
+                    selectedRoom,
+
+                room:
+                    getCurrentRoom().name,
+
+                slotIndexes:
+                    [...selectedSlots],
+
+                time:
+                    timeRange,
+
+                duration:
+                    duration,
+
+                staffName:
+                    staffName,
+
+                email:
+                    email,
+
+                meetingTitle:
+                    meetingTitle,
+
+                attendees:
+                    attendees
+
+            };
+
+
+            const bookings =
+                getBookings();
+
+
+            const conflict =
+                bookings.some(
+                    existing =>
+
+                        existing.date ===
+                        booking.date
+
+                        &&
+
+                        existing.roomId ===
+                        booking.roomId
+
+                        &&
+
+                        existing.slotIndexes.some(
+                            index =>
+
+                                booking.slotIndexes.includes(
+                                    index
+                                )
+
+                        )
+
+                );
+
+
+            if (conflict) {
+
+                alert(
+
+                    "One or more selected hours have just been booked for this room. " +
+                    "Please choose another time."
+
+                );
+
+                refreshTimeAvailability();
+
+                return;
+
+            }
+
+
+            bookings.push(
+                booking
+            );
+
+
+            saveBookings(
+                bookings
+            );
+
+
+            document.getElementById(
+                "bookingReference"
+            ).textContent =
+                reference;
+
+
+            document.getElementById(
+                "confirmationDate"
+            ).textContent =
+
+                selectedDate.toLocaleDateString(
+                    "en-US",
+                    {
+
+                        weekday: "long",
+
+                        year: "numeric",
+
+                        month: "long",
+
+                        day: "numeric"
+
+                    }
+                );
+
+
+            document.getElementById(
+                "confirmationTime"
+            ).textContent =
+                timeRange;
+
+
+            document.getElementById(
+                "confirmationDuration"
+            ).textContent =
+
+                duration +
+
+                (
+                    duration === 1
+                    ? " hour"
+                    : " hours"
+                );
+
+
+            document.getElementById(
+                "confirmationTitle"
+            ).textContent =
+                meetingTitle;
+
+
+            document.getElementById(
+                "confirmationAttendees"
+            ).textContent =
+                attendees;
+
+
+            document.getElementById(
+                "confirmationRoom"
+            ).textContent =
+                getCurrentRoom().name;
+
+
+            document.getElementById(
+                "confirmation"
+            ).style.display =
+                "flex";
+
+
+            refreshTimeAvailability();
+
+        }
+    );
+
+
+/* =========================
+   RESET FORM
+========================= */
+
+function resetForm() {
+
+    document.getElementById(
+        "bookingForm"
+    ).reset();
+
+
+    selectedDate = null;
+
+    selectedSlots = [];
+
+
+    document
+        .querySelectorAll(
+            ".time-slot"
+        )
+        .forEach(
+            slot => {
+
+                slot.classList.remove(
+                    "selected",
+                    "start",
+                    "end"
+                );
+
+            }
+        );
+
+
+    document.getElementById(
+        "selectedDateText"
+    ).textContent =
+        "Select a date from the calendar";
+
+
+    updateTimeSelection();
+
+    renderCalendar();
+
+    refreshTimeAvailability();
+
+    updateAttendeeOptions();
+
+}
+
+
+/* =========================
+   CLOSE BOOKING MODAL
+========================= */
+
+function closeConfirmation() {
+
+    document.getElementById(
+        "confirmation"
+    ).style.display =
+        "none";
+
+
+    resetForm();
+
+}
+
+
+/* =========================
+   CANCELLATION
+========================= */
+
+document
+    .getElementById(
+        "cancellationForm"
+    )
+    .addEventListener(
+        "submit",
+        function(event) {
+
+            event.preventDefault();
+
+
+            const reference =
+                document.getElementById(
+                    "cancelReference"
+                )
+                .value
+                .trim();
+
+
+            const email =
+                document.getElementById(
+                    "cancelEmail"
+                )
+                .value
+                .trim();
+
+
+            if (
+
+                reference === "" ||
+                email === ""
+
+            ) {
+
+                alert(
+
+                    "Please enter your booking reference and email address."
+
+                );
+
+                return;
+
+            }
+
+
+            document.getElementById(
+                "cancelledReference"
+            ).textContent =
+                reference;
+
+
+            document.getElementById(
+                "cancelConfirmation"
+            ).style.display =
+                "flex";
+
+        }
+    );
+
+
+/* =========================
+   CLOSE CANCELLATION
+========================= */
+
+function closeCancellation() {
+
+    document.getElementById(
+        "cancelConfirmation"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "cancellationForm"
+    ).reset();
+
+}
+
+
+/* =========================
+   HELP
+========================= */
+
+function openHelp() {
+
+    document.getElementById(
+        "helpModal"
+    ).style.display =
+        "flex";
+
+}
+
+
+/* =========================
+   SETTINGS
+========================= */
+
+function openSettings() {
+
+    document.getElementById(
+        "settingsModal"
+    ).style.display =
+        "flex";
+
+}
+
+
+/* =========================
+   LOGIN
+========================= */
+
+function openLogin() {
+
+    document.getElementById(
+        "loginModal"
+    ).style.display =
+        "flex";
+
+}
+
+
+/* =========================
+   CLOSE NAVIGATION MODALS
+========================= */
+
+function closeNavModal(id) {
+
+    document.getElementById(
+        id
+    ).style.display =
+        "none";
+
+}
+
+
+/* =========================
+   SHOW / HIDE INSTRUCTIONS
+========================= */
+
+function toggleInstructions() {
+
+    const value =
+        document.getElementById(
+            "showInstructions"
+        ).value;
+
+
+    const instructions =
+        document.querySelector(
+            ".time-instructions"
+        );
+
+
+    if (instructions) {
+
+        instructions.style.display =
+            value === "yes"
+                ? "block"
+                : "none";
+
+    }
+
+}
+
+
+/* =========================
+   TIME FORMAT
+========================= */
+
+function changeTimeFormat(format) {
+
+    if (format === "24") {
+
+        alert(
+            "24-hour time format selected. The time display can be connected to the booking system when the final Microsoft 365 version is implemented."
+        );
+
+    }
+
+}
+
+
+/* =========================
+   DEMO LOGIN
+========================= */
+
+function loginDemo() {
+
+    const email =
+        document.getElementById(
+            "loginEmail"
+        ).value.trim();
+
+
+    const password =
+        document.getElementById(
+            "loginPassword"
+        ).value.trim();
+
+
+    if (
+        !email ||
+        !password
+    ) {
+
+        alert(
+            "Please enter your email address and password."
+        );
+
+        return;
+
+    }
+
+
+    alert(
+        "Sign-in submitted. Connect this form to the OAG / Microsoft 365 authentication system for real login functionality."
+    );
+
+}
+
+
+/* =========================
+   CLOSE NAV MODALS
+   WHEN CLICKING OUTSIDE
+========================= */
+
+window.addEventListener(
+    "click",
+    function(event) {
+
+        const modalIds = [
+
+            "helpModal",
+            "settingsModal",
+            "loginModal"
+
+        ];
+
+
+        modalIds.forEach(
+            function(id) {
+
+                const modal =
+                    document.getElementById(id);
+
+
+                if (
+                    event.target === modal
+                ) {
+
+                    modal.style.display =
+                        "none";
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+/* =========================
+   INITIAL LOAD
+========================= */
+
+document.getElementById(
+    "roomSelect"
+).value =
+    selectedRoom;
+
+
+changeRoom(
+    selectedRoom
+);
+
+</script>
+
+</body>
+</html>
